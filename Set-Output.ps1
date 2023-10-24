@@ -1,3 +1,7 @@
+param (
+    [string]$device = $null
+)
+
 # Check if the AudioDeviceCmdlets module is installed
 $moduleInstalled = Get-Module -ListAvailable | Where-Object { $_.Name -eq 'AudioDeviceCmdlets' }
 
@@ -21,15 +25,19 @@ Import-Module AudioDeviceCmdlets
 $devices = Get-AudioDevice -List
 
 # Prompt the user to choose a device
-$chosenDevice = Read-Host "which device (h for headset / b for bluetooth)?"
+If($device -eq $null){
+    $chosenDevice = Read-Host "which device (h for headset / b for bluetooth)?"
+}
+else {
+    $chosenDevice = $device;
+}
 
-$chosenDevice = If ($chosenDevice -eq "b") {"Headphones (2- BT SPEAKER)"} Else { "Speakers (High Definition Audio Device)"};
+
+$chosenDevice = If ($chosenDevice -eq "b") { "Headphones (2- BT SPEAKER)" } Else { "Speakers (High Definition Audio Device)" };
 
 $result = $null;
-foreach ($d in $devices)
-{
-    if ($d.Name -eq $chosenDevice)
-    {
+foreach ($d in $devices) {
+    if ($d.Name -eq $chosenDevice) {
         $result = $d
         break;
     }
